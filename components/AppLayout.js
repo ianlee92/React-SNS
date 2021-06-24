@@ -15,7 +15,7 @@ const AppLayout = ({ children }) => {
     )
 };
 
-AppLayout.prototype = {
+AppLayout.PropTypes = {
     children: PropTypes.node.isRequired,
 };
 
