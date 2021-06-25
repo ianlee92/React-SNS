@@ -32,7 +32,7 @@ const AppLayout = ({ children }) => {
              <Row gutter={8}> {/* gutter는 컬럼 사이에 간격을 둠 */}
                 {/* n/24 24등분 24가 넘어가면 내려감 xs: 모바일 / sm: 태블릿 / md: 작은 데스크탑 */}
                 <Col xs={24} md={6}>
-                    {isLoggedIn ? <UserProfile /> : <LoginForm setIsLoggedIn={setIsLoggedIn} />}
+                    {isLoggedIn ? <UserProfile setIsLoggedIn={setIsLoggedIn} /> : <LoginForm setIsLoggedIn={setIsLoggedIn} />}
                 </Col>
                 <Col xs={24} md={12}>
                     {children}
