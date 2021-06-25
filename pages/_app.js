@@ -9,7 +9,6 @@ const App = ({ Component }) => {
     return (
         <>
             <Head>
-                <meta charSet="utf-8" />
                 <title>파랑새</title>
             </Head>
             <Component />
