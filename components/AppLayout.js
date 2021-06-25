@@ -1,12 +1,13 @@
 // Layout은 일부 공동 부분
 
-import React, {useState}from 'react';
+import React, {useState} from 'react';
+React.useLayoutEffect = React.useEffect 
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Menu, Input, Row, Col } from 'antd';
 import styled from 'styled-components';
-import UserProfile from '../components/UserProfile';
-import LoginForm from '../components/LoginForm';
+import UserProfile from './UserProfile';
+import LoginForm from './LoginForm';
 
 const SearchInput = styled(Input.Search)`
     vertical-align: middle;
@@ -45,7 +46,7 @@ const AppLayout = ({ children }) => {
     )
 };
 
-AppLayout.PropTypes = {
+AppLayout.propTypes = {
     children: PropTypes.node.isRequired,
 };
 

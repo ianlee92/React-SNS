@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 // 함수를 캐싱하는 것이 useCallback이고 값을 캐싱하는 것은 useMemo
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import useInput from '../hooks/useInput';
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
@@ -12,18 +14,21 @@ const FormWrapper = styled(Form)`
 `;
 
 const LoginForm = ({ setIsLoggedIn }) => {
-    const [id, setId] = useState('');
-    const [password, setPassword] = useState('');
-    // Component에 props로 넘겨주는 함수는 useCallback을 써야 최적화됨
-    const onChangeId = useCallback((e) => {
-        setId(e.target.value);
-    }, []);
-    const onChangePassword = useCallback((e) => {
-        setPassword(e.target.value);
-    }, []);
-    // styled-components쓰기 싫으면 useMemo를 사용한다. 리렌더링되도 객체가 유지되어 최적화가 된다
-    // const style = useMemo(() => ({ marginTop: 10 }), []);
-    // 리액트에서 리렌더링은 return () 버츄얼돔 안에서만 발생
+    const [id, onChangeId] = useInput('');
+    const [password, onChangePassword] = useInput('')
+
+    // const [id, setId] = useState('');
+    // const [password, setPassword] = useState('');
+    // // Component에 props로 넘겨주는 함수는 useCallback을 써야 최적화됨
+    // const onChangeId = useCallback((e) => {
+    //     setId(e.target.value);
+    // }, []);
+    // const onChangePassword = useCallback((e) => {
+    //     setPassword(e.target.value);
+    // }, []);
+    // // styled-components쓰기 싫으면 useMemo를 사용한다. 리렌더링되도 객체가 유지되어 최적화가 된다
+    // // const style = useMemo(() => ({ marginTop: 10 }), []);
+    // // 리액트에서 리렌더링은 return () 버츄얼돔 안에서만 발생
     
     const onSubmitForm = useCallback(() => {
         // e.preventDefault(); antd는 쓰지않고 onFinish에 이미 적용되어 있음
@@ -58,5 +63,9 @@ const LoginForm = ({ setIsLoggedIn }) => {
         </FormWrapper>
     );
 }
+
+LoginForm.propTypes = {
+    setIsLoggedIn: PropTypes.func.isRequired,
+};
 
 export default LoginForm;
