@@ -35,7 +35,6 @@ const LoginForm = () => {
     
     const onSubmitForm = useCallback(() => {
         // e.preventDefault(); antd는 쓰지않고 onFinish에 이미 적용되어 있음
-        console.log(id, password);
         dispatch(loginAction({ id, password }));
     }, [id, password]); // dependency에 넣어줌
 

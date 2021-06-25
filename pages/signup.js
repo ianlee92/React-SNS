@@ -37,7 +37,6 @@ const Signup = () => {
         if (!term) { // 약관 동의 누르지 않은 경우
             return setTermError(true);
         }
-        console.log(id, nickname, password);
     }, [password, passwordCheck, term]); // [] 내부 값이 바뀌면 함수 재생성
     
     return (

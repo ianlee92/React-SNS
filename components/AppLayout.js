@@ -1,7 +1,5 @@
 // Layout은 일부 공동 부분
-
 import React from 'react';
-React.useLayoutEffect = React.useEffect 
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Menu, Input, Row, Col } from 'antd';
@@ -19,16 +17,16 @@ const AppLayout = ({ children }) => {
     return (
         <div>
             <Menu mode="horizontal">
-                <Menu.Item>
+                <Menu.Item key="home">>
                     <Link href="/"><a>홈</a></Link>
                 </Menu.Item>
-                <Menu.Item>
+                <Menu.Item key="profile">>
                     <Link href="/profile"><a>프로필</a></Link>
                 </Menu.Item>
-                <Menu.Item>
+                <Menu.Item key="search">>
                     <SearchInput enterButton />
                 </Menu.Item>
-                <Menu.Item>
+                <Menu.Item key="signup">>
                     <Link href="/signup"><a>회원가입</a></Link>
                 </Menu.Item>
             </Menu>
