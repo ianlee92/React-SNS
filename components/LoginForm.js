@@ -3,8 +3,10 @@ import React, { useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+
 import useInput from '../hooks/useInput';
+import { loginAction } from '../reducers';
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
@@ -13,7 +15,8 @@ const FormWrapper = styled(Form)`
     padding: 10px;
 `;
 
-const LoginForm = ({ setIsLoggedIn }) => {
+const LoginForm = () => {
+    const dispatch = useDispatch();
     const [id, onChangeId] = useInput('');
     const [password, onChangePassword] = useInput('')
 
@@ -33,7 +36,7 @@ const LoginForm = ({ setIsLoggedIn }) => {
     const onSubmitForm = useCallback(() => {
         // e.preventDefault(); antd는 쓰지않고 onFinish에 이미 적용되어 있음
         console.log(id, password);
-        setIsLoggedIn(true);
+        dispatch(loginAction({ id, password }));
     }, [id, password]); // dependency에 넣어줌
 
     return (
@@ -63,9 +66,5 @@ const LoginForm = ({ setIsLoggedIn }) => {
         </FormWrapper>
     );
 }
-
-LoginForm.propTypes = {
-    setIsLoggedIn: PropTypes.func.isRequired,
-};
 
 export default LoginForm;
