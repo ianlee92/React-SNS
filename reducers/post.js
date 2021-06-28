@@ -5,7 +5,7 @@ export const initialState = {
             id: 1,
             nickname: '이안',
         },
-        content: '첫 게시글',
+        content: '첫 게시글 #해시태그 #소통',
         Images: [{
           src: 'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726',
         }, {
