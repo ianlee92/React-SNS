@@ -3,10 +3,10 @@ import React, { useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import useInput from '../hooks/useInput';
-import { loginAction } from '../reducers/user';
+import { loginRequestAction } from '../reducers/user';
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
@@ -17,6 +17,7 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
     const dispatch = useDispatch();
+    const { isLoggingIn } = useSelector((state) => state.user);
     const [id, onChangeId] = useInput('');
     const [password, onChangePassword] = useInput('')
 
@@ -35,7 +36,7 @@ const LoginForm = () => {
     
     const onSubmitForm = useCallback(() => {
         // e.preventDefault(); antd는 쓰지않고 onFinish에 이미 적용되어 있음
-        dispatch(loginAction({ id, password }));
+        dispatch(loginRequestAction({ id, password }));
     }, [id, password]); // dependency에 넣어줌
 
     return (
@@ -59,7 +60,7 @@ const LoginForm = () => {
             {/* 인라인스타일링 style={{ marginTop: '10' }} 객체를 넣어주면 {} === {} false이므로 리액트 매번 버츄얼 돔으로 검사하다가
                 이전버전이랑 객체가 다르네 하면서 실제로 바뀐게 없는데 리렌더링해버린다 -> styled-components를 쓰자 */}
             <ButtonWrapper>
-                <Button type="primary" htmlType="submit" loading={false}>로그인</Button>
+                <Button type="primary" htmlType="submit" loading={isLoggingIn}>로그인</Button> {/* isLoggingIn 버튼로딩중 */}
                 <Link href="/signup"><a><Button>회원가입</Button></a></Link>
             </ButtonWrapper>
         </FormWrapper>

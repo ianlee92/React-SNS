@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { delay, put, takeLatest, all, fork } from '@redux-saga/effects';
+import { delay, put, takeLatest, all, fork } from 'redux-saga/effects';
 
 function addPostAPI(data) {
     return axios.post('/api/post', data);

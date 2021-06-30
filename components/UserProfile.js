@@ -1,27 +1,31 @@
 import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Card, Avatar, Button } from 'antd';
 
-import { logoutAction } from '../reducers/user';
+import { logoutRequestAction } from '../reducers/user';
 
 const UserProfile = () => {
     const dispatch = useDispatch();
+    const { me, isLoggingOut } = useSelector((state) => state.user);
+
     const onLogOut = useCallback(() => {
-        dispatch(logoutAction());
+        dispatch(logoutRequestAction());
     }, []);
+
     return (
         <Card
-            action={[ // 리액트에서 배열은 key를 넣어줘야함
+            actions={[ // 리액트에서 배열은 key를 넣어줘야함
                 <div key="twit">짹짹<br />0</div>,
                 <div key="followings">팔로잉<br />0</div>,
                 <div key="followings">팔로워<br />0</div>
             ]}
         >
             <Card.Meta
-                avatar={<Avatar>ian</Avatar>}
-                title="ianlee"
+                avatar={<Avatar>{me.nickname[0]}</Avatar>}
+                title={me.nickname}
             />
-            <Button onClick={onLogOut}>로그아웃</Button>
+            {/* isLoggingOut이 true면 loading으로 바뀜 */}
+            <Button onClick={onLogOut} loading={isLoggingOut}>로그아웃</Button> 
         </Card>
     );
 };

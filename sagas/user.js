@@ -1,4 +1,4 @@
-import { all, fork, put, delay, takeLatest } from "@redux-saga/effects"
+import { all, fork, put, delay, takeLatest } from "redux-saga/effects"
 import axios from "axios";
 
 function logInAPI(data) {
@@ -11,6 +11,7 @@ function* logIn(action) { // *붙이면 generator
         yield delay(1000);
         yield put({
             type: 'LOG_IN_SUCCESS',
+            data: action.data,
         });
     } catch (err) {
         yield put({
@@ -44,7 +45,7 @@ function* watchLogIn() {
 }
 
 function* watchLogOut() {
-    yield takeLatest('LOG_IN_REQUEST', logOut);
+    yield takeLatest('LOG_OUT_REQUEST', logOut);
 }
 
 export default function* userSaga() {
