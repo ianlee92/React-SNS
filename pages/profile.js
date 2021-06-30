@@ -6,24 +6,21 @@ import AppLayout from '../components/AppLayout';
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
 
-
 const Profile = () => {
-    const { me } = useSelector((state) => state.user);
-    
-    return (
-        <>
-            <Head>
-                <title>프로필 | 파랑새</title>
-            </Head>
-            <AppLayout>
-                <NicknameEditForm />
-                <FollowList header="팔로잉" data={me.Followings} />
-                <FollowList header="팔로워" data={me.Followers} />
-            </AppLayout>
-        </>
-    )
-    
-    
+  const { me } = useSelector((state) => state.user);
+
+  return (
+    <>
+      <Head>
+        <title>프로필 | 파랑새</title>
+      </Head>
+      <AppLayout>
+        <NicknameEditForm />
+        <FollowList header="팔로잉" data={me.Followings} />
+        <FollowList header="팔로워" data={me.Followers} />
+      </AppLayout>
+    </>
+  );
 };
 
 export default Profile;

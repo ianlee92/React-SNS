@@ -12,16 +12,16 @@ import post from './post';
 // }
 
 const rootReducer = combineReducers({
-    index: (state = {}, action) => {
-        switch (action.type) {
-            case HYDRATE: // SSR을 위해서 사용
-                return { ...state, ...action.payload };
-            default:
-                return state;
-        }
-    },
-    user,
-    post,
+  index: (state = {}, action) => {
+    switch (action.type) {
+      case HYDRATE: // SSR을 위해서 사용
+        return { ...state, ...action.payload };
+      default:
+        return state;
+    }
+  },
+  user,
+  post,
 });
 
 export default rootReducer;

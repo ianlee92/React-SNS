@@ -7,19 +7,17 @@ import 'antd/dist/antd.css';
 
 import wrapper from '../store/configureStore';
 
-const App = ({ Component }) => {
-    return (
-        <>
-            <Head>
-                <title>파랑새</title>
-            </Head>
-            <Component />
-        </>
-    )
-}
+const App = ({ Component }) => (
+  <>
+    <Head>
+      <title>파랑새</title>
+    </Head>
+    <Component />
+  </>
+);
 
 App.propTypes = {
-    Component: PropTypes.elementType.isRequired,
-}
+  Component: PropTypes.elementType.isRequired,
+};
 
 export default wrapper.withRedux(App);
