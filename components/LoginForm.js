@@ -17,8 +17,8 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
     const dispatch = useDispatch();
-    const { isLoggingIn } = useSelector((state) => state.user);
-    const [id, onChangeId] = useInput('');
+    const { logInLoading } = useSelector((state) => state.user);
+    const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('')
 
     // const [id, setId] = useState('');
@@ -36,15 +36,15 @@ const LoginForm = () => {
     
     const onSubmitForm = useCallback(() => {
         // e.preventDefault(); antd는 쓰지않고 onFinish에 이미 적용되어 있음
-        dispatch(loginRequestAction({ id, password }));
-    }, [id, password]); // dependency에 넣어줌
+        dispatch(loginRequestAction({ email, password }));
+    }, [email, password]); // dependency에 넣어줌
 
     return (
         <FormWrapper onFinish={onSubmitForm}>
             <div>
-                <label htmlFor="user-id">아이디</label>
+                <label htmlFor="user-email">이메일</label>
                 <br />
-                <Input name="user-id" value={id} onChange={onChangeId} required />
+                <Input name="user-email" type="email" value={email} onChange={onChangeEmail} required />
             </div>
             <div>
                 <label htmlFor="user-password">비밀번호</label>
@@ -60,7 +60,7 @@ const LoginForm = () => {
             {/* 인라인스타일링 style={{ marginTop: '10' }} 객체를 넣어주면 {} === {} false이므로 리액트 매번 버츄얼 돔으로 검사하다가
                 이전버전이랑 객체가 다르네 하면서 실제로 바뀐게 없는데 리렌더링해버린다 -> styled-components를 쓰자 */}
             <ButtonWrapper>
-                <Button type="primary" htmlType="submit" loading={isLoggingIn}>로그인</Button> {/* isLoggingIn 버튼로딩중 */}
+                <Button type="primary" htmlType="submit" loading={logInLoading}>로그인</Button>
                 <Link href="/signup"><a><Button>회원가입</Button></a></Link>
             </ButtonWrapper>
         </FormWrapper>

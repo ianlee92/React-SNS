@@ -5,13 +5,18 @@ import styled from 'styled-components';
 
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
+import { useDispatch, userSelector } from 'react-redux';
+import { SIGN_UP_REQUEST } from '../reducers/user';
 
 const ErrorMessage = styled.div`
     color: red;
 `;
 
 const Signup = () => {
-    const [id, onChangeId] = useInput('');
+    const dispatch = useDispatch();
+    const { signUpLoading } = userSelector((state) => state.user);
+
+    const [email, onChangeEmail] = useInput('');
     const [nickname, onChangeNickname] = useInput('');
     const [password, onChangePassword] = useInput('');
     const [passwordCheck, setPasswordCheck] = useState('');
@@ -37,7 +42,11 @@ const Signup = () => {
         if (!term) { // 약관 동의 누르지 않은 경우
             return setTermError(true);
         }
-    }, [password, passwordCheck, term]); // [] 내부 값이 바뀌면 함수 재생성
+        dispatch({
+            type: SIGN_UP_REQUEST,
+            data: { email, password, nickname },
+        });
+    }, [email, password, passwordCheck, term]); // [] 내부 값이 바뀌면 함수 재생성
     
     return (
         <AppLayout>
@@ -46,9 +55,9 @@ const Signup = () => {
             </Head>
             <Form onFinish={onSubmit}>
                 <div>
-                    <label htmlFor="user-id">아이디</label>
+                    <label htmlFor="user-id">이메일</label>
                     <br />
-                    <Input name="user-id" value={id} required onChange={onChangeId} />
+                    <Input name="user-id" type="email" value={email} required onChange={onChangeEmail} />
                 </div>
                 <div>
                     <label htmlFor="user-nick">닉네임</label>
@@ -71,7 +80,7 @@ const Signup = () => {
                     {termError && <ErrorMessage>약관에 동의하셔야 합니다.</ErrorMessage>}
                 </div>
                 <div style={{ marginTop: 10 }}>
-                    <Button type="primary" htmlType="submit">가입하기</Button>
+                    <Button type="primary" htmlType="submit" loading={signUpLoading}>가입하기</Button>
                     {/* 버튼을 누르면 onFinish 이벤트가 호출 */}
                 </div>
             </Form>
