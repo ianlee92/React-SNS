@@ -8,6 +8,7 @@ const PostCardContent = ({ postData }) => ( // 첫 번째 게시글 #해시태�
       if (v.match(/(#[^\s#]+)/)) {
         return <Link href={`/hashtag/${v.slice(1)}`} key={i}><a>{v}</a></Link>;
       }
+      return v;
     })}
   </div>
 );

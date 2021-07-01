@@ -52,16 +52,16 @@ export const addComment = (data) => ({
   data,
 });
 
-const dummyPost = {
+const dummyPost = (data) => ({
   id: 2,
-  content: '더미데이터',
+  content: data,
   User: {
     id: 1,
     nickname: 'hyeok',
   },
   Images: [],
   Comments: [],
-};
+});
 
 // (이전상태, 액션) => 다음상태
 const reducer = (state = initialState, action) => {
@@ -76,7 +76,7 @@ const reducer = (state = initialState, action) => {
     case ADD_POST_SUCCESS: {
       return {
         ...state,
-        mainPosts: [dummyPost, ...state.mainPosts],
+        mainPosts: [dummyPost(action.data), ...state.mainPosts],
         addPostLoading: false,
         addPostDone: true,
       };
