@@ -9,19 +9,26 @@ export const initialState = {
     },
     content: '첫 게시글 #해시태그 #소통',
     Images: [{
+      id: shortId.generate(),
       src: 'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726',
     }, {
+      id: shortId.generate(),
       src: 'https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg',
     }, {
+      id: shortId.generate(),
       src: 'https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg',
     }],
     Comments: [{
+      id: shortId.generate(),
       User: {
+        id: shortId.generate(),
         nickname: 'ian',
       },
       content: '우와 신기',
     }, {
+      id: shortId.generate(),
       User: {
+        id: shortId.generate(),
         nickname: 'yoono',
       },
       content: '퍼가요~',
@@ -65,6 +72,15 @@ const dummyPost = (data) => ({
   Comments: [],
 });
 
+const dummyComment = (data) => ({
+  id: shortId.generate(),
+  content: data,
+  User: {
+    id: 1,
+    nickname: 'hyeok',
+  },
+});
+
 // (이전상태, 액션) => 다음상태
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -97,8 +113,15 @@ const reducer = (state = initialState, action) => {
         addCommentError: null,
       };
     case ADD_COMMENT_SUCCESS: {
+      // action.data.content, postId, userId
+      const postIndex = state.mainPosts.findIndex((v) => v.id === action.data.postId);
+      const post = { ...state.mainPosts[postIndex] };
+      post.Comments = [dummyComment(action.data.content), ...post.Comments];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = post;
       return {
         ...state,
+        mainPosts,
         addCommentLoading: false,
         addCommentDone: true,
       };
