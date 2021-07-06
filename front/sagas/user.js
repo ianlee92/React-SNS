@@ -13,7 +13,7 @@ function logInAPI(data) {
 
 function* logIn(action) { // *붙이면 generator
   try {
-    const result = yield call(logInAPI, action.data);
+    const result = yield call(logInAPI, action.data); // back에 보낼때 req.body가 됨
     yield put({
       type: LOG_IN_SUCCESS,
       data: result.data,

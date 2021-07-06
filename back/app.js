@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const dotenv = require('dotenv');
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
 const db = require('./models');
@@ -34,6 +37,14 @@ app.use(cors({
 // 미들웨어(use안에 들어가는것)는 순서대로 실행되므로 위에 적어야함
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser('snssecret'));
+app.use(session({
+    saveUninitialized: false,
+    resave: false,
+    secret: process.env.COOKIE_SECRET,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', (req, res) => {
     res.send('hello express');
