@@ -7,7 +7,7 @@ db.sequelize.sync()
         console.log('db 연결 성공');
     })
     .catch(console.error);
-    
+
 /*
 app.get -> 가져오다
 app.post -> 생성하다
@@ -33,5 +33,5 @@ app.get('/api/posts', (req, res) => {
 app.use('/post', postRouter);
 
 app.listen(3065, () => {
-    console.log('서버 실행 중');
+    console.log('서버 실행 중!');
 });
