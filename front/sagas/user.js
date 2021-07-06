@@ -8,16 +8,15 @@ import {
 } from '../reducers/user';
 
 function logInAPI(data) {
-  return axios.post('/api/login', data);
+  return axios.post('/user/login', data);
 }
 
 function* logIn(action) { // *붙이면 generator
   try {
-    // const result = yield call(logInAPI);
-    yield delay(1000);
+    const result = yield call(logInAPI, action.data);
     yield put({
       type: LOG_IN_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (err) {
     yield put({
@@ -28,7 +27,7 @@ function* logIn(action) { // *붙이면 generator
 }
 
 function logOutAPI() {
-  return axios.post('/api/logout');
+  return axios.post('/user/logout');
 }
 
 function* logOut() {
@@ -47,7 +46,7 @@ function* logOut() {
 }
 
 function signUpAPI(data) {
-  return axios.post('http://localhost:3065/user', data); // post는 데이터를 넘김 action으로 받아온 action.data
+  return axios.post('/user', data); // post는 데이터를 넘김 action으로 받아온 action.data
 }
 
 function* signUp(action) { // singup페이지에 dispatch로 보낸 email, password, nickname
