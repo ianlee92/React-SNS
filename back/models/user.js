@@ -21,9 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     User.associate = (db) => { // 관계형
         db.User.hasMany(db.Post); // 사람:포스트 1:다
         db.User.hasMany(db.Comment);
-        db.User.belongstoMany(db.Post, { through: 'Like', as: 'Liked' }); //through를 두 테이블 만들어줘야됨
-        db.User.belongstoMany(db.User, { through: 'Follow', as: 'Followers', foreignKey: 'FollowingId' });
-        db.User.belongstoMany(db.User, { through: 'Follow', as: 'Followings', foreignKey: 'FollowerId' });
+        db.User.belongsToMany(db.Post, { through: 'Like', as: 'Liked' }); //through를 두 테이블 만들어줘야됨
+        db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followers', foreignKey: 'FollowingId' });
+        db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followings', foreignKey: 'FollowerId' });
     };
     return User;
 };
