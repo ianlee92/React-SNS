@@ -8,8 +8,8 @@ module.exports = () => {
         usernameField: 'email', // req.body.email
         passwordField: 'password',
     }, async (email, password, done) => {
-        try {
-            const user = await User.findOne({
+        try { // await는 항상 try로 감싼다
+            const user = await User.findOne({ // 이메일 있는지 확인
                 where: { email }
             });
             if (!user) {
@@ -17,9 +17,9 @@ module.exports = () => {
             }
             const result = await bcrypt.compare(password, user.password);
             if (result) {
-                return done(null, user);
+                return done(null, user); // 두번째가 성공했을 때
             }
-            return done(null, false, { reason: '비밀번호가 틀렸습니다.' })
+            return done(null, false, { reason: '비밀번호가 틀렸습니다.' });
         } catch (error) {
             console.error(error);
             return done(error);
