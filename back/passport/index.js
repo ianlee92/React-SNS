@@ -10,7 +10,7 @@ module.exports = () => {
     passport.deserializeUser(async (id, done) => { // 복원하기 위해 id를 통해 db에서 복구를 함
         try {
             const user = await User.findOne({ where: { id }});
-            done(null, user);
+            done(null, user); // 정보를 복구해서 req.user에 넣어줌
             await User.findOne({ where: { id }})
         } catch (error) {
             console.error(error);
