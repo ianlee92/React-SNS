@@ -4,7 +4,9 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
+const morgan = require('morgan');
 const postRouter = require('./routes/post');
+const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const db = require('./models');
 const passportConfig = require('./passport');
@@ -29,6 +31,8 @@ app.options -> 찔러보기
 app.head -> 헤더(바디에 대한 부가적정보)만 가져오기(헤더/바디)
 */
 
+app.use(morgan('dev'));
+
 // 브라우저에서 백엔드 서버로 요청시 cors 문제발생하지만 프론트서버에서 백엔드서버로 갈때는 문제가 안생긴다
 // 그러므로 브라우저(3060) - 프론트 서버(Next)(3060) - 백엔드 서버(express)(3065) 순으로 요청하는 proxy를 통해 cors해결
 app.use(cors({
@@ -52,15 +56,8 @@ app.get('/', (req, res) => {
     res.send('hello express');
 });
 
-app.get('/api', (req, res) => {
-    res.send('hello express');
-});
-
-app.get('/api/posts', (req, res) => {
-    res.send('hello express');
-});
-
 app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 
 // 에러처리 미들웨어 (기본으로 생기는데 커스텀하려면 씀)
