@@ -1,7 +1,7 @@
 const express = require('express');
 // node에서는 웹팩을 안쓰므로 import -> require, export default -> module.exports
 
-const { Post } = require('../models');
+const { Post, Image, Comment, User } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 // 라우터로 분리
@@ -11,8 +11,18 @@ router.post('/', isLoggedIn, async (req, res, next) => { // POST /post
         const post = await Post.create({
             content: req.body.content,
             UserId: req.user.id,
-        })
-        res.status(201).json(post);
+        });
+        const fulPost = await Post.findOne({
+            where: { id: post.id },
+            include: [{
+                model: Image,
+            }, {
+                model: Comment,
+            }, {
+                model: User,
+            }]
+        });
+        res.status(201).json(fulPost);
     } catch (error) {
         console.error(error);
         next(error);
