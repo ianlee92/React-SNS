@@ -3,9 +3,29 @@ import axios from 'axios';
 
 import {
   LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
-  SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, FOLLOW_REQUEST, UNFOLLOW_REQUEST, FOLLOW_SUCCESS,
-  FOLLOW_FAILURE, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE,
+  SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, FOLLOW_REQUEST, UNFOLLOW_REQUEST,
+  FOLLOW_SUCCESS, FOLLOW_FAILURE, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE, LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE,
 } from '../reducers/user';
+
+function loadMyInfoAPI() {
+  return axios.get('/user'); // get, delete는 데이터가 없기때문에 withCredentials만 옴(saga index에서 공통으로 설정해둠)
+}
+
+function* loadMyInfo(action) { // *붙이면 generator
+  try {
+    const result = yield call(loadMyInfoAPI, action.data); // back에 보낼때 req.body가 됨
+    yield put({
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
 
 function logInAPI(data) {
   return axios.post('/user/login', data);
@@ -103,6 +123,10 @@ function* unfollow(action) {
   }
 }
 
+function* watchloadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
 function* watchFollow() {
   yield takeLatest(FOLLOW_REQUEST, follow);
 }
@@ -125,6 +149,7 @@ function* watchSignUp() {
 
 export default function* userSaga() {
   yield all([ // all은 동시에 실행
+    fork(watchloadMyInfo),
     fork(watchFollow),
     fork(watchUnfollow),
     fork(watchLogIn), // fork는 함수 실행
