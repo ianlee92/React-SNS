@@ -1,16 +1,18 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+
 const { User, Post } = require('../models');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const db = require('../models');
 
 const router = express.Router();
 
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => { // 서버에러, 성공객체, info
         if (err) {
-           console.error(err);
-           next(err);
+            console.error(err);
+            return next(err);
         }
         if (info) {
             return res.status(401).send(info.reason); // 401 로그인 잘못됐을 때
@@ -40,7 +42,7 @@ router.post('/login', (req, res, next) => {
     })(req, res, next);
 }); 
 
-router.post('/', async (req, res, next) => { // POST /user
+router.post('/', isNotLoggedIn, async (req, res, next) => { // POST /user
    try {
         const exUser = await User.findOne({
             where: {
@@ -64,7 +66,7 @@ router.post('/', async (req, res, next) => { // POST /user
     }
 });
 
-router.post('/user/logout', (req, res) => {
+router.post('/logout', isLoggedIn, (req, res) => {
     req.logout();
     req.session.destroy();
     res.send('ok');
