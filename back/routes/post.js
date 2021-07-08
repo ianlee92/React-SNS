@@ -65,7 +65,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => { // POST 
     }
 });
 
-router.patch('/:postId/like', async (req, res, next) => { // PATCH /post/1/like
+router.patch('/:postId/like', isLoggedIn, async (req, res, next) => { // PATCH /post/1/like
     try {
         const post = await Post.findOne({ where: { id: req.params.postId }});
         if (!post) {
@@ -79,7 +79,7 @@ router.patch('/:postId/like', async (req, res, next) => { // PATCH /post/1/like
     }
 });
 
-router.delete('/:postId/like', async (req, res, next) => { // DELETE /post/1/like
+router.delete('/:postId/like', isLoggedIn, async (req, res, next) => { // DELETE /post/1/like
     try {
         const post = await Post.findOne({ where: { id: req.params.postId }});
         if (!post) {
@@ -93,8 +93,19 @@ router.delete('/:postId/like', async (req, res, next) => { // DELETE /post/1/lik
     }
 });
 
-router.delete('/', (req, res) => { // DELETE /post
-    res.send('hello express');
+router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELETE /post/10
+    try {
+        await Post.destroy({
+            where: { 
+                id: req.params.postId, // 게시글아이디
+                UserId: req.user.id, // 내가쓴게시글이어야함
+            },
+        });
+        res.status(200).json({ PostId: parseInt(req.params.postId, 10) }); // 파라미터는 문자열
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
 });
 
 module.exports = router;

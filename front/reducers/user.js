@@ -159,6 +159,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.changeNicknameError = null;
       break;
     case CHANGE_NICKNAME_SUCCESS:
+      draft.me.nickname = action.data.nickname; // 내 닉네임을 액션 데이터 닉네임으로 변경
       draft.changeNicknameLoading = false;
       draft.changeNicknameDone = true;
       break;
