@@ -15,11 +15,17 @@ const ErrorMessage = styled.div`
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
+
+  useEffect(() => { // 로그인 성공시 me가 생김
+    if (me && me.id) {
+      Router.replace('/'); // 회원가입 페이지에서 나감
+    }
+  }, [me && me.id]);
 
   useEffect(() => {
     if (signUpDone) {
-      Router.push('/');
+      Router.replace('/'); // 뒤로가기 했을 때 그페이지가 나오지않게끔 할때는 push대신 replace
     }
   }, [signUpDone]);
 

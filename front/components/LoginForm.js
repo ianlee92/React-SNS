@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 // 함수를 캐싱하는 것이 useCallback이고 값을 캐싱하는 것은 useMemo
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
@@ -17,10 +17,15 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const { logInLoading } = useSelector((state) => state.user);
+  const { logInLoading, logInError } = useSelector((state) => state.user);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
 
+  useEffect(() => {
+    if (logInError) {
+      alert(logInError);
+    }
+  }, [logInError]);
   // const [id, setId] = useState('');
   // const [password, setPassword] = useState('');
   // // Component에 props로 넘겨주는 함수는 useCallback을 써야 최적화됨
