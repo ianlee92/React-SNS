@@ -126,7 +126,7 @@ router.patch('/:userId/follow', isLoggedIn, async (req, res, next) => { // PATCH
             res.status(403).send('존재하지 않는 회원을 팔로우할 수 없습니다.'); // 403 금지
         }
         await user.addFollowers(req.user.id);
-        res.status(200).json({ UserId: parseInt(req.params.userId, 10) }); // 닉네임 업데이트
+        res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
     } catch (error) {
         console.error(error);
         next(error);
@@ -137,10 +137,38 @@ router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => { // DELE
     try {
         const user = await User.findOne({ where: {id: req.params.userId}});
         if (!user) {
-            res.status(403).send('존재하지 않는 회원을 언팔로우할 수 없습니다.'); // 403 금지
+            res.status(403).send('존재하지 않는 회원을 언팔로우할 수 없습니다.');
         }
         await user.removeFollowers(req.user.id);
-        res.status(200).json({ UserId: parseInt(req.params.userId, 10) }); // 닉네임 업데이트
+        res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.get('/followers', isLoggedIn, async (req, res, next) => { // GET /user/followers
+    try {
+        const user = await User.findOne({ where: {id: req.user.id}}); // 자신을 먼저 찾음
+        if (!user) {
+            res.status(403).send('팔로워가 없습니다.');
+        }
+        const followers = await user.getFollowers();
+        res.status(200).json(followers);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.get('/followings', isLoggedIn, async (req, res, next) => { // GET /user/followings
+    try {
+        const user = await User.findOne({ where: {id: req.user.id}}); // 자신을 먼저 찾음
+        if (!user) {
+            res.status(403).send('팔로잉이 없습니다.');
+        }
+        const followings = await user.getFollowings();
+        res.status(200).json(followings);
     } catch (error) {
         console.error(error);
         next(error);
