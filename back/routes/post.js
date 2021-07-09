@@ -17,13 +17,36 @@ try {
     fs.mkdirSync('uploads');
 }
 
-router.post('/', isLoggedIn, async (req, res, next) => { // POST /post
+const upload = multer({
+    storage: multer.diskStorage({ // 실습시에만 하드디스크에 AWS S3로 대체
+        destination(req, file, done) {
+            done(null, 'uploads');
+        },
+        filename(req, file, done) { // 이안.png
+            const ext = path.extname(file.originalname); // 확장자 추출(.png)
+            const basename = path.basename(file.originalname, ext); // 이안
+            done(null, basename + '_' + new Date().getTime() + ext); // 이안1593401932412.png
+        },
+    }),
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+});
+
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST /post
     try {
         const post = await Post.create({
             content: req.body.content,
             UserId: req.user.id,
         });
-        const fulPost = await Post.findOne({
+        if (req.body.image) {
+            if (Array.isArray(req.body.image)) { // 이미지를 여러개 올리면 image: [이안.png, 안이.png]
+                const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image })));
+                await post.addImages(images);
+            } else { // 이미지를 하나만 올리면 image: 이안.png
+                const image = await Image.create({ src: req.body.image });
+                await post.addImages(image);
+            }
+        }
+        const fullPost = await Post.findOne({
             where: { id: post.id },
             include: [{
                 model: Image,
@@ -42,25 +65,11 @@ router.post('/', isLoggedIn, async (req, res, next) => { // POST /post
                 attributes: ['id'],
             }]
         });
-        res.status(201).json(fulPost);
+        res.status(201).json(fullPost);
     } catch (error) {
         console.error(error);
         next(error);
     }
-});
-
-const upload = multer({
-    storage: multer.diskStorage({ // 실습시에만 하드디스크에 AWS S3로 대체
-        destination(req, file, done) {
-            done(null, 'uploads');
-        },
-        filename(req, file, done) { // 이안.png
-            const ext = path.extname(file.originalname); // 확장자 추출(.png)
-            const basename = path.basename(file.originalname, ext); // 이안
-            done(null, basename + new Date().getTime() + ext); // 이안1593401932412.png
-        },
-    }),
-    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
 });
 
 // upload.single 사진한장 array 여러장 none 텍스트,json fields 파일2개이상 있을때

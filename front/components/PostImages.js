@@ -14,7 +14,7 @@ const PostImages = ({ images }) => {
   if (images.length === 1) {
     return (
       <>
-        <img role="presentation" src={images[0].src} alt={images[0].src} onClick={onZoom} />
+        <img role="presentation" src={`http://localhost:3065/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -23,8 +23,8 @@ const PostImages = ({ images }) => {
     return (
       <>
         <div>
-          <img role="presentation" style={{ width: '50%', display: 'inline-block' }} src={images[0].src} alt={images[0].src} onClick={onZoom} />
-          <img role="presentation" style={{ width: '50%', display: 'inline-block' }} src={images[1].src} alt={images[1].src} onClick={onZoom} />
+          <img role="presentation" style={{ width: '50%', display: 'inline-block' }} src={`http://localhost:3065/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+          <img role="presentation" style={{ width: '50%', display: 'inline-block' }} src={`http://localhost:3065/${images[1].src}`} alt={images[1].src} onClick={onZoom} />
         </div>
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
@@ -33,7 +33,7 @@ const PostImages = ({ images }) => {
   return (
     <>
       <div>
-        <img role="presentation" style={{ width: '50%' }} src={images[0].src} alt={images[0].src} onClick={onZoom} />
+        <img role="presentation" style={{ width: '50%' }} src={`http://localhost:3065/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
         <div
           role="presentation"
           style={{ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle' }}
