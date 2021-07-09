@@ -4,6 +4,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
+const path = require('path');
 const morgan = require('morgan');
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
@@ -39,11 +40,12 @@ app.use(cors({
     origin: true, // Access-Control-Allow-Origin
     credentials: true, // Access-Control-Allow-Credentials true가 해야 쿠키 전달됨 
 }));
+app.use('/', express.static(path.join(__dirname, 'uploads'))) // 윈도우, 맥 운영체제마다 /upload \upload 차이가 있으므로 join을 사용
 // json, urlencoded가 front에서 받아온 데이터를 req.body안에 넣어줌
 // 미들웨어(use안에 들어가는것)는 순서대로 실행되므로 위에 적어야함
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser('snssecret'));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
     saveUninitialized: false,
     resave: false,
