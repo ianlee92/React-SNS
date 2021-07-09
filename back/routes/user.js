@@ -135,11 +135,25 @@ router.patch('/:userId/follow', isLoggedIn, async (req, res, next) => { // PATCH
 
 router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => { // DELETE /user/1/follow
     try {
-        const user = await User.findOne({ where: {id: req.params.userId}});
+        const user = await User.findOne({ where: {id: req.params.userId}}); // 그 사람을 찾고
         if (!user) {
             res.status(403).send('존재하지 않는 회원을 언팔로우할 수 없습니다.');
         }
         await user.removeFollowers(req.user.id);
+        res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => { // DELETE /user/follower/2
+    try {
+        const user = await User.findOne({ where: {id: req.params.userId}});
+        if (!user) {
+            res.status(403).send('존재하지 않는 회원을 차단할 수 없습니다.');
+        }
+        await user.removeFollowings(req.user.id);
         res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
     } catch (error) {
         console.error(error);
