@@ -1,11 +1,22 @@
 const express = require('express');
 // node에서는 웹팩을 안쓰므로 import -> require, export default -> module.exports
+const multer = require('multer');
+const path = require('path'); // 노드에서 http처럼 제공 (설치x)
+const fs = require('fs'); // 파일시스템 조작
 
 const { Post, Image, Comment, User } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 // 라우터로 분리
 const router = express.Router();
+
+try {
+    fs.accessSync('uploads'); // uploads 폴더 있는지 확인
+} catch (error) {
+    console.log('uploads 폴더가 없으므로 생성합니다.');
+    fs.mkdirSync('uploads');
+}
+
 router.post('/', isLoggedIn, async (req, res, next) => { // POST /post
     try {
         const post = await Post.create({
@@ -38,7 +49,27 @@ router.post('/', isLoggedIn, async (req, res, next) => { // POST /post
     }
 });
 
-router.post('/:postId/comment', isLoggedIn, async (req, res, next) => { // POST /post/comment
+const upload = multer({
+    storage: multer.diskStorage({ // 실습시에만 하드디스크에 AWS S3로 대체
+        destination(req, file, done) {
+            done(null, 'uploads');
+        },
+        filename(req, file, done) { // 이안.png
+            const ext = path.extname(file.originalname); // 확장자 추출(.png)
+            const basename = path.basename(file.originalname, ext); // 이안
+            done(null, basename + new Date().getTime() + ext); // 이안1593401932412.png
+        },
+    }),
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+});
+
+// upload.single 사진한장 array 여러장 none 텍스트,json fields 파일2개이상 있을때
+router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => { // POST /post/images
+    console.log(req.files);
+    res.json(req.files.map((v) => v.filename));
+});
+
+router.post('/:postId/comment', isLoggedIn, async (req, res, next) => { // POST /post/1/comment
     try {
         const post = await Post.findOne({
             where: {id: req.params.postId}
