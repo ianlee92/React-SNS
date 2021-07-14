@@ -28,6 +28,15 @@ router.get('/', async (req, res, next) => { // GET /posts
                 model: User, // 좋아요 누른 사람
                 as: 'Likers',
                 attributes: ['id'],
+            }, {
+                model: Post,
+                as: 'Retweet',
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: Image,
+                }]
             }],
             // offset: 0, // 1~10 offset이 10이면 11~20 중간빠지면 오류나고 하는 치명적인 단점때문에 lastId를씀 
         });
