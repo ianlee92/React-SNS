@@ -15,7 +15,7 @@ router.get('/:hashtag', async (req, res, next) => { // GET /hashtag/노드
           order: [['createdAt', 'DESC']], // ASC가 기본, 최신글 순 DESC
           include: [{
               model: Hashtag,
-              where: {name:req.params.hashtag},
+              where: { name: decodeURIComponent(req.params.hashtag) },
           },{
               model: User,
               attributes: ['id', 'nickname'],
