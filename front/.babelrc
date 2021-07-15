@@ -1,0 +1,10 @@
+// npm i babel-plugin-styled-components
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    ["babel-plugin-styled-components", {
+      "ssr": true,
+      "displayName": true // 개발모드에서 component명이 나옴
+    }]
+  ]
+}
