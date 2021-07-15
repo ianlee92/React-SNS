@@ -20,7 +20,7 @@ export const Overlay = styled.div`
 `;
 
 export const Header = styled.header`
-    header: 44px;
+    height: 44px;
     background: white;
     position: relative;
     padding: 0;

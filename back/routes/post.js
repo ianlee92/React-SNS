@@ -33,7 +33,7 @@ const upload = multer({
 
 router.post('/', isLoggedIn, upload.none(), async (req, res, next) => { // POST /post
     try {
-        const hashtags = req.body.content.match(/#[^\s]+/g);
+        const hashtags = req.body.content.match(/#[^\s#]+/g);
         const post = await Post.create({
             content: req.body.content,
             UserId: req.user.id,
@@ -85,14 +85,14 @@ router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => { 
     res.json(req.files.map((v) => v.filename));
 });
 
-router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => { // POST /post/1/comment
+router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => { // POST /post/1/retweet
     try {
         const post = await Post.findOne({
             where: {id: req.params.postId},
             include: [{
                 model: Post,
                 as: 'Retweet',
-            }]
+            }],
         });
         if (!post) {
             return res.status(403).send('존재하지 않는 게시글입니다.');
@@ -154,7 +154,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => { // POST 
 router.post('/:postId/comment', isLoggedIn, async (req, res, next) => { // POST /post/1/comment
     try {
         const post = await Post.findOne({
-            where: {id: req.params.postId}
+            where: {id: req.params.postId},
         });
         if (!post) {
             return res.status(403).send('존재하지 않는 게시글입니다.');
@@ -182,10 +182,10 @@ router.patch('/:postId/like', isLoggedIn, async (req, res, next) => { // PATCH /
     try {
         const post = await Post.findOne({ where: { id: req.params.postId }});
         if (!post) {
-            return res.status(403).send('게시글이 존재하지 않습니다.')
+            return res.status(403).send('게시글이 존재하지 않습니다.');
         }
         await post.addLikers(req.user.id);
-        res.json({ postId: post.id, UserId: req.user.id });
+        res.json({ PostId: post.id, UserId: req.user.id });
     } catch (error) {
         console.error(error);
         next(error);
@@ -199,7 +199,7 @@ router.delete('/:postId/like', isLoggedIn, async (req, res, next) => { // DELETE
             return res.status(403).send('게시글이 존재하지 않습니다.')
         }
         await post.removeLikers(req.user.id);
-        res.json({ postId: post.id, UserId: req.user.id });
+        res.json({ PostId: post.id, UserId: req.user.id });
     } catch (error) {
         console.error(error);
         next(error);

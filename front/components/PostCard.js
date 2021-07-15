@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Popover, Button, Avatar, List, Comment } from 'antd';
@@ -35,7 +35,7 @@ const PostCard = ({ post }) => {
   }, [id]);
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
-  });
+  }, []);
 
   const onRemovePost = useCallback(() => {
     if (!id) {
@@ -45,7 +45,7 @@ const PostCard = ({ post }) => {
       type: REMOVE_POST_REQUEST,
       data: post.id,
     });
-  }, []);
+  }, [id]);
 
   const onRetweet = useCallback(() => {
     if (!id) {
@@ -78,7 +78,8 @@ const PostCard = ({ post }) => {
                       <Button>수정</Button>
                       <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
                     </>
-                  ) : <Button>신고</Button>}
+                  )
+                  : <Button>신고</Button>}
               </Button.Group>
                     )}
           >

@@ -24,7 +24,7 @@ const PostForm = () => {
       formData.append('image', p);
     });
     formData.append('content', text);
-    dispatch({
+    return dispatch({
       type: ADD_POST_REQUEST,
       data: formData,
     });
@@ -45,14 +45,14 @@ const PostForm = () => {
       type: UPLOAD_IMAGES_REQUEST,
       data: imageFormData,
     });
-  });
+  }, []);
 
   const onRemoveImage = useCallback((index) => () => { // map안에 콜백함수 넣고싶으면 고차함수 사용
     dispatch({
       type: REMOVE_IMAGE,
       data: index,
     });
-  });
+  }, []);
 
   return (
     <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
