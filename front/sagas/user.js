@@ -9,6 +9,7 @@ import {
   CHANGE_NICKNAME_FAILURE, LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWERS_SUCCESS, LOAD_FOLLOWERS_FAILURE,
   LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS, LOAD_FOLLOWINGS_FAILURE,
   REMOVE_FOLLOWER_REQUEST, REMOVE_FOLLOWER_SUCCESS, REMOVE_FOLLOWER_FAILURE,
+  LOAD_USER_REQUEST, LOAD_USER_SUCCESS, LOAD_USER_FAILURE,
 } from '../reducers/user';
 
 function removeFollowerAPI(data) {
@@ -87,13 +88,32 @@ function* changeNickname(action) {
   }
 }
 
-function loadMyInfoAPI() {
-  return axios.get('/user'); // get, delete는 데이터가 없기때문에 withCredentials만 옴(saga index에서 공통으로 설정해둠)
+function loadUserAPI(data) {
+  return axios.get(`/user/${data}`); // get, delete는 데이터가 없기때문에 withCredentials만 옴(saga index에서 공통으로 설정해둠)
 }
 
-function* loadMyInfo(action) { // *붙이면 generator
+function* loadUser(action) { // *붙이면 generator
   try {
-    const result = yield call(loadMyInfoAPI, action.data); // back에 보낼때 req.body가 됨
+    const result = yield call(loadUserAPI, action.data); // back에 보낼때 req.body가 됨
+    yield put({
+      type: LOAD_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_USER_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function loadMyInfoAPI() {
+  return axios.get('/user');
+}
+
+function* loadMyInfo() {
+  try {
+    const result = yield call(loadMyInfoAPI);
     yield put({
       type: LOAD_MY_INFO_SUCCESS,
       data: result.data,
@@ -216,6 +236,10 @@ function* watchChangeNickname() {
   yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
 }
 
+function* watchloadUser() {
+  yield takeLatest(LOAD_USER_REQUEST, loadUser);
+}
+
 function* watchloadMyInfo() {
   yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
@@ -247,6 +271,7 @@ export default function* userSaga() {
     fork(watchLoadFollowings),
     fork(watchChangeNickname),
     fork(watchloadMyInfo),
+    fork(watchloadUser),
     fork(watchFollow),
     fork(watchUnfollow),
     fork(watchLogIn), // fork는 함수 실행

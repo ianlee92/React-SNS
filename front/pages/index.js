@@ -52,7 +52,7 @@ const Home = () => {
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
   const cookie = req ? req.headers.cookie : '';
   axios.defaults.headers.Cookie = '';
-  if (req && cookie) {
+  if (req && cookie) { // 서버요청, 쿠키 있을때. 조건문 안넣으면 쿠키가 공유되서 다른사람도 내 아이디 들어가진다
     axios.defaults.headers.Cookie = cookie;
   }
   store.dispatch({
@@ -65,7 +65,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
   await store.sagaTask.toPromise();
 });
 
-// "next-redux-wrapper" 6버젼
+// "next-redux-wrapper" 6버젼 이하
 // export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
 //   context.store.dispatch({
 //     type: LOAD_MY_INFO_REQUEST,

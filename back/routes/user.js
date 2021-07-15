@@ -8,6 +8,7 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
 
 router.get('/', async (req, res, next) => { // GET /user
+    // console.log(req.headers); // 쿠키확인
     try {
         if (req.user) { // 로그인 상태에서만
             const fullUserWithoutPassword = await User.findOne({
