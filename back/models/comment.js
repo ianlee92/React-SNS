@@ -1,17 +1,23 @@
-module.exports = (sequelize, DataTypes) => {
-    const Comment = sequelize.define('Comment', { // MYSql에서는 comments 테이블 생성
-        // id가 기본적으로 들어있다.
-        content: {
-            type: DataTypes.TEXT,
-            allowNull: false, // 필수
-        },
-    }, {
-        charset: 'utf8mb4',
-        collate: 'utf8mb4_general_ci', // 이모티콘 저장
-    });
-    Comment.associate = (db) => {
+const DataTypes = require('sequelize');
+const {Model} = DataTypes;
+module.exports = class Comment extends Model {
+    static init(sequelize){
+        return super.init({
+            // id가 기본적으로 들어있다.
+            content: {
+                type: DataTypes.TEXT,
+                allowNull: false, // 필수
+            },
+        }, {
+            modelName: 'Comment',
+            tableName: 'comments',
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_general_ci', // 이모티콘 저장
+            sequelize,
+        });
+    }
+    static associate(db){
         db.Comment.belongsTo(db.User); // UserId: 1
         db.Comment.belongsTo(db.Post); // PostId: 3
-    };
-    return Comment;
+    }
 };
